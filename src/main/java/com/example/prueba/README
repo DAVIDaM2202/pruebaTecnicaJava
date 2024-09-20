@@ -1,0 +1,100 @@
+# Prices API
+
+Esta aplicación es un servicio RESTful que permite obtener los precios de un producto específico de acuerdo con un identificador de marca, producto y una fecha de aplicación.
+
+## Estructura de la aplicación
+
+### 1. **Controladores (Controllers)**
+
+El controlador principal se encuentra en la clase `PriceController`. Este controlador expone un endpoint que permite recibir solicitudes HTTP para consultar precios. Las solicitudes se manejan con la siguiente ruta:
+
+- `GET /api/prices/prices` - Permite obtener los precios aplicables según los parámetros proporcionados.
+
+#### Parámetros del endpoint:
+- `productId`: Identificador del producto.
+- `brandId`: Identificador de la marca.
+- `applicationDate`: Fecha y hora en la que se desea consultar el precio.
+
+#### Ejemplo de solicitud:
+```sh
+http://localhost:8080/api/prices/prices?productId=35455&brandId=1&applicationDate=2020-06-14T10:00:00
+```
+
+### 2. **Servicio (Service)**
+
+El servicio principal, `PriceServiceImp`, es responsable de la lógica de negocio. Implementa la lógica que interactúa con la base de datos a través del repositorio `PriceRepository`.
+
+### 3. **Repositorio (Repository)**
+
+El `PriceRepository` es una interfaz que extiende de `JpaRepository`, permitiendo la interacción con la base de datos. Aquí se define la consulta que busca los precios en función del identificador del producto, la marca y la fecha de aplicación.
+El `PriceService` es una interfaz, permitiendo la interacción con la base de datos. Que seguidamente el Servicio PriceServiceImp extendera
+
+### 4. **Modelo (Model)**
+
+El modelo `Price` define la estructura de la entidad `prices` que se almacena en la base de datos. Este modelo contiene atributos como `productId`, `brandId`, `price`, `startDate`, `endDate`, entre otros.
+El modelo `PriceResponseDTO` define la estructura de la entidad que devuelve el metodo GET del Controlador
+
+
+La aplicacion esta estrucutrada utilizando una arquitectura hexagonal.
+## Cómo ejecutar la aplicación
+
+1. **Clonar el repositorio**
+
+   Clona el proyecto desde el repositorio de GitHub o cualquier otra fuente.
+
+2. **Configurar la base de datos**
+
+   La aplicación usa una base de datos en memoria H2 para pruebas. No es necesario configurar una base de datos externa, ya que se creará automáticamente al iniciar la aplicación.
+   Al fitxero data.sql se encuentran los inserts, podemos encontrar este fitxero en test, el create table se crea a partir de memoria de la Entidad Price
+
+3. **Compilar y ejecutar la aplicación**
+
+   Usa Maven para compilar y ejecutar la aplicación:
+
+   ```bash
+   mvn clean install
+   mvn spring-boot:run
+   ```
+
+4. **Realizar solicitudes en Postman o cURL**
+
+   Una vez que la aplicación esté en ejecución, puedes realizar solicitudes `GET` para obtener los precios en función de los parámetros indicados.
+
+   #### Ejemplo de URL en Postman:
+
+   http://localhost:8080/api/prices/prices?productId=35455&brandId=1&applicationDate=2020-06-14T10:00:00
+
+
+   #### Ejemplo de respuesta esperada:
+   ```json
+   [
+       {
+           "productId": 35455,
+           "brandId": 1,
+           "priceList": 1,
+           "startDate": "2020-06-14T00:00:00",
+           "endDate": "2020-12-31T23:59:59",
+           "price": 35.50
+       }
+   ]
+   ```
+
+## Testing
+
+La aplicación tiene pruebas unitarias que validan el funcionamiento del endpoint a través de JUnit y Spring Test. Estas pruebas se encuentran en el paquete `com.example.prueba`.
+
+Para ejecutar las pruebas, utiliza el siguiente comando:
+
+```bash
+mvn test
+```
+
+## Requisitos
+
+- **Java 17** o superior.
+- **Maven** 3.6 o superior.
+- **Postman** o cualquier otra herramienta para probar APIs REST.
+
+## Autor
+
+**David Ayachi Matas**.
